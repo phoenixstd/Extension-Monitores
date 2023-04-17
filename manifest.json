@@ -2,8 +2,8 @@
     "manifest_version": 3,
     "name": "Phoenix Studio - Busqueda Tippers",
     "author":"sebastian garzon",
-    "description": "Esta extension que busca los tippers de chaturbate en la transmision de la modelo",
-    "version": "2.1",
+    "description": "Esta extension que busca los tippers de chaturbate en la transmision de la modelos y envia mensajes a esos tippers",
+    "version": "2.2",
     "action": {
         "default_popup": "popup.html"
     },
