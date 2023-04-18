@@ -18,31 +18,21 @@ h4 {
     box-shadow: 10px 10px #c01996be;
 }
 
-#runexec {
+#runexec{
     background-image: url(../images/play.png);
-    height: 75px;
-    width: 150px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 0px 0px;
-    margin-right: 20px;
-    cursor: pointer;
-    vertical-align: middle;
-    font-size: 20px;
-    background-color: #7C2282;
-    border-color: #7C2282;
-    border-radius: 20px;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    text-shadow: 2px 2px #e63cbc7a;
 }
 
-#stopexec {
+#stopexec{
     background-image: url(../images/stop.png);
+}
+
+#runexec, #stopexec {
     height: 75px;
     width: 150px;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 0px 0px;
+    /*margin-right: 20px;*/
     cursor: pointer;
     vertical-align: middle;
     font-size: 20px;
