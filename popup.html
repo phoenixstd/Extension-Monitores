@@ -11,15 +11,18 @@
     <title>Extension Phoenix Studio</title>
 </head>
 
-<body style="width: 350px; height: 70px; background-color: #FEFEFE;" class="container-fluid">
-    <div class="my-3">
-        <h4 class="text-center text-primary"><img src="images/Header.png" width="100%" /><br><br>Enviar mensajes</h4>
+<body>
+    <img id="img-header" src="images/Header.png" width="100%"/>
+    
+    <div class="my-3 container-fluid">    
+        <h4>Extension Phoenix Studio</h4>
         <div class="text-center">
-            <input class="btn-start btn-primary" type="submit" id="runexec" value="Iniciar">
-            <input class="btn-stop btn-primary" type="submit" id="stopexec" value="Detener">
+            <button class="btn-start btn-primary" id="runexec">Enviar Mensaje a Tippers</button>
+            <button class="btn-stop btn-primary" id="stopexec">Detener</button>
         </div>
     </div>
-    <footer class="text-center text-primary">@2023 - Phoenix Studio</footer>
+    
+    <div id="footer">@2023 - Phoenix Studio</div>
 </body>
 <script src="js/popup.js"></script>
 
