@@ -20,15 +20,11 @@ h4 {
 
 #runexec {
     background-image: url(../images/play.png);
-    /*margin-left: 20px;*/
     height: 75px;
     width: 150px;
     background-size: cover;
     background-repeat: no-repeat;
-    /* make the background image appear only once */
     background-position: 0px 0px;
-    /* equivalent to 'top left' */
-    /*border: none;            assuming we don't want any borders */
     margin-right: 20px;
     cursor: pointer;
     vertical-align: middle;
@@ -42,16 +38,12 @@ h4 {
 
 #stopexec {
     background-image: url(../images/stop.png);
-    /*margin-left: 20px;*/
     height: 75px;
     width: 150px;
     background-size: cover;
     background-repeat: no-repeat;
-    /* make the background image appear only once */
     background-position: 0px 0px;
-    /* equivalent to 'top left' */
     cursor: pointer;
-    /* make the cursor like hovering over an <a> element */
     vertical-align: middle;
     font-size: 20px;
     background-color: #7C2282;
