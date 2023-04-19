@@ -41,6 +41,11 @@ h4 {
     border-radius: 20px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     text-shadow: 2px 2px #e63cbc7a;
+    color: #FEFEFE;
+}
+
+.accordion-body{
+    text-align: center;
 }
 
 #footer {
