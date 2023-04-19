@@ -48,6 +48,10 @@ h4 {
     text-align: center;
 }
 
+.accordion-header{
+    box-shadow: 10px 10px #c01996be;
+}
+
 #footer {
     margin-top: 50px;
     bottom: 0;
