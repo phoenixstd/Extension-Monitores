@@ -72,7 +72,35 @@ window.addEventListener('load', (event) => {
             // Comenzar a observar el nodo objetivo para mutaciones especificadas en la configuración
             observer.observe(targetNode, config);
         }
-    } catch (error) { }    
+    } catch (error) { }
+    try {
+        // Selecciona el elemento que deseas observar
+        const elementoObservado = document.querySelector("span.roomStatus");
+        var estado = "";
+        // Crea una instancia de MutationObserver con una función de devolución de llamada
+        const observador = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if( mutation.addedNodes.length > 0 ){
+                    if( estado !== mutation.addedNodes[0].data ){
+                        var estadoTransmision = mutation.addedNodes[0].data;
+                        alert(estadoTransmision);
+                        console.log('Estado de Transmision:', estadoTransmision);
+                        estado = estadoTransmision;
+                    } 
+                }
+            });
+        });
+
+        // Configura las opciones para el observador (en este caso, observar cambios en el contenido y atributos)
+        const opcionesObservador = {
+            childList: true,
+            attributes: true,
+            subtree: true
+        };
+
+        // Inicia la observación del elemento observado con las opciones especificadas
+        observador.observe(elementoObservado, opcionesObservador);
+    } catch (error) { }  
 });
 
 function mensaje(userName, nomTipper) {

@@ -17,7 +17,11 @@ document.getElementById('runexec').addEventListener("click", () => {
             if (location) {
                 var vpn = location.country;
                 if (vpn == "Colombia") {
-                    sendCBCommandPage("startMensajes", "", "");
+                    var sendMessage = confirm("¿Desea enviar mensajes a los tippers?\n"+
+                        "Tenga en cuenta que realizar demasiadas ejecuciones podria ocasionar baneo a la modelo");
+                    if (sendMessage) {
+                        sendCBCommandPage("startMensajes", "", "");
+                    }
                 } else {
                     alert("Debes tener una VPN Activa para ejecutar esta extension");
                 }
