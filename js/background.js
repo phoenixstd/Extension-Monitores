@@ -4,8 +4,8 @@ let dominio = "apps.phoenixstd.com";
 
 let url_api_tippers = "https://" + dominio + "/api/tippers.php";
 let url_api_mensajes = "https://" + dominio + "/api/mensajes_telegram.php";
-let url_api_tipperspru = "http://localhost/web/" + dominio + "/api/tippers.php";
-let url_api_mensajes_telegram = "http://localhost/web/" + dominio + "/api/mensajes_telegram.php";
+/*let url_api_tipperspru = "http://localhost/web/" + dominio + "/api/tippers.php";
+let url_api_mensajes_telegram = "http://localhost/web/" + dominio + "/api/mensajes_telegram.php";*/
 
 let tippersMensajes = [];
 let windowTipper = 0;
