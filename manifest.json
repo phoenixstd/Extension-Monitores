@@ -3,7 +3,7 @@
     "name": "Phoenix Studio - Busqueda Tippers",
     "author":"sebastian garzon",
     "description": "Esta extension que busca los tippers de chaturbate en la transmision de la modelos y envia mensajes a esos tippers",
-    "version": "2.0",
+    "version": "2.4",
     "action": {
         "default_popup": "popup.html"
     },
