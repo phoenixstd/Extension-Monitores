@@ -1,3 +1,4 @@
+let contraseña = "Fenix2023.";
 document.getElementById('runexec').addEventListener("click", () => {
     let userIP = null;
 
@@ -20,7 +21,12 @@ document.getElementById('runexec').addEventListener("click", () => {
                     var sendMessage = confirm("¿Desea enviar mensajes a los tippers?\n"+
                         "Tenga en cuenta que realizar demasiadas ejecuciones podria ocasionar baneo a la modelo");
                     if (sendMessage) {
-                        sendCBCommandPage("startMensajes", "", "");
+                        var password = prompt("Ingrese Contraseña para Ejecutar esta acción");
+                        if(password == contraseña){
+                            sendCBCommandPage("startMensajes", "", "");
+                        }else{
+                            alert("Contraseña Incorrecta");
+                        }
                     }
                 } else {
                     alert("Debes tener una VPN Activa para ejecutar esta extension");

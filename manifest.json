@@ -3,7 +3,7 @@
     "name": "Phoenix Studio - Extension (Modelos)",
     "author":"sebastian garzon",
     "description": "Estension de envio de informacion de las transmisiones de modelos para stats",
-    "version": "2.4",
+    "version": "2.6",
     "action": {
         "default_popup": "popup.html"
     },
@@ -27,7 +27,7 @@
     },
     "content_scripts": [{
         "matches": [
-            "https://*.chaturbate.com/*", "https://chaturbate.com/"
+            "https://*.chaturbate.com/*", "https://chaturbate.com/", "https://*.stripchat.com/*", "https://es.stripchat.com/*"
         ],
         "js": [
             "js/jquery-3.4.1.min.js",

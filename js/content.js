@@ -2,8 +2,8 @@
         Configuracion del Dominio
 ----------------------------------------*/
 let dominio = "apps.phoenixstd.com";
-let url_api = "https://" + dominio + "/api/";
-//let url_api = "http://localhost/proyectos/" + dominio + "/api/";
+//let url_api = "https://" + dominio + "/api/";
+let url_api = "http://localhost/proyectos/" + dominio + "/api/";
 let mensajeText = [];
 let tipperPut = [];
 
@@ -54,77 +54,131 @@ async function postTransmision(modelo, estado, plataforma) {
 
 window.addEventListener('load', (event) => {
     try {
-        let perfil = document.querySelector(".user_information_header_username").textContent.toLowerCase();
-        //let transmision = document.querySelector(".gender-tab.tabElement.active.tabBorder.activeRoom.tabElementLink").textContent.toLowerCase();
-        let url_transmision = window.location.toString();
-        if( url_transmision.includes(perfil) && url_transmision.includes("chaturbate.com/b/") ){
-            try {
-            
-                // Selecciona el elemento que contiene los resultados de la consulta
-                const targetNode = document;
-                // Opciones para el observador (que mutaciones observar)
-                const config = { attributes: false, childList: true, subtree: true };
-
-                // Crear una instancia del observador con una función callback
-                const observer = new MutationObserver(function(mutationsList, observer) {
-                    // Iterar por cada mutación
-                    let encontrado = false;
-                    for(let mutation of mutationsList) {
-                        // Si se agregó un nuevo nodo
-                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0 && encontrado == false) {
-                            // Verificar si el nuevo nodo contiene resultados de la consulta
-                            const newNodes = mutation.addedNodes;
-                            for (let i = 0; i < newNodes.length; i++) {
-                                try {
-                                    const queryResult = newNodes[i].querySelectorAll(".hasBg.isTip.roomNotice > div > div");
-                                    if (queryResult.length > 0) {
-                                        var tipper = queryResult[0].textContent;
-                                        console.log(tipper);
-                                        encontrado = true;
-                                        sendCommand("EnviarTipper", tipper, perfil, "");
-                                    }
-                                } catch (e) { }
+        let pagina = window.location.hostname;
+        let estadoTransmision = "";
+        let perfil = "";
+        if( pagina.includes("chaturbate") ){
+            perfil = document.querySelector(".user_information_header_username").textContent.toLowerCase();
+            //let transmision = document.querySelector(".gender-tab.tabElement.active.tabBorder.activeRoom.tabElementLink").textContent.toLowerCase();
+            let url_transmision = window.location.toString();
+            if( url_transmision.includes(perfil) && url_transmision.includes("chaturbate.com/b/") ){
+                try {
+                    // Selecciona el elemento que contiene los resultados de la consulta
+                    const targetNode = document;
+                    // Opciones para el observador (que mutaciones observar)
+                    const config = { attributes: false, childList: true, subtree: true };
+    
+                    // Crear una instancia del observador con una función callback
+                    const observer = new MutationObserver(function(mutationsList, observer) {
+                        // Iterar por cada mutación
+                        let encontrado = false;
+                        for(let mutation of mutationsList) {
+                            // Si se agregó un nuevo nodo
+                            if (mutation.type === 'childList' && mutation.addedNodes.length > 0 && encontrado == false) {
+                                // Verificar si el nuevo nodo contiene resultados de la consulta
+                                const newNodes = mutation.addedNodes;
+                                for (let i = 0; i < newNodes.length; i++) {
+                                    try {
+                                        const queryResult = newNodes[i].querySelectorAll(".hasBg.isTip.roomNotice > div > div");
+                                        if (queryResult.length > 0) {
+                                            var tipper = queryResult[0].textContent;
+                                            console.log(tipper);
+                                            encontrado = true;
+                                            sendCommand("EnviarTipper", tipper, perfil, "");
+                                        }
+                                    } catch (e) { }
+                                }
                             }
                         }
-                    }
-                });
-
-                // Comenzar a observar el nodo objetivo para mutaciones especificadas en la configuración
-                observer.observe(targetNode, config);
-            } catch (error) { }
-            try {
-                // Selecciona el elemento que deseas observar
-                const elementoObservado = document.querySelector("span.roomStatus");
-                var estadoTransmision = "";
-                // Crea una instancia de MutationObserver con una función de devolución de llamada
-                const observador = new MutationObserver(function(mutations) {
-                    mutations.forEach(async function(mutation) {
-                        if( mutation.addedNodes.length > 0 ){
-                            if( estadoTransmision !== mutation.addedNodes[0].data ){
-                                estadoTransmision = mutation.addedNodes[0].data;
-                                //alert(estadoTransmision);
-                                console.log('Estado de Transmision:'+ estadoTransmision);
-                                var textTransmision = await postTransmision(perfil, estadoTransmision, "chaturbate");
-                                if( textTransmision["itemCount"] > 0 ){
-                                    console.log('Estado de Transmision POST ->'+ estadoTransmision);
-                                }
-                            } 
-                        }
                     });
-                });
+    
+                    // Comenzar a observar el nodo objetivo para mutaciones especificadas en la configuración
+                    observer.observe(targetNode, config);
+                } catch (error) { }
+                try {
+                    // Selecciona el elemento que deseas observar
+                    const elementoObservado = document.querySelector("span.roomStatus");
+                    // Crea una instancia de MutationObserver con una función de devolución de llamada
+                    const observador = new MutationObserver(function(mutations) {
+                        mutations.forEach(async function(mutation) {
+                            if( mutation.addedNodes.length > 0 ){
+                                if( estadoTransmision !== mutation.addedNodes[0].data ){
+                                    estadoTransmision = mutation.addedNodes[0].data;
+                                    //alert(estadoTransmision);
+                                    console.log('Estado de Transmision:'+ estadoTransmision);
+                                    var textTransmision = await postTransmision(perfil, estadoTransmision, "chaturbate");
+                                    if( textTransmision["itemCount"] > 0 ){
+                                        console.log('Estado de Transmision POST ->'+ estadoTransmision);
+                                    }
+                                } 
+                            }
+                        });
+                    });
+    
+                    // Configura las opciones para el observador (en este caso, observar cambios en el contenido y atributos)
+                    const opcionesObservador = {
+                        childList: true,
+                        attributes: true,
+                        subtree: true
+                    };
+    
+                    // Inicia la observación del elemento observado con las opciones especificadas
+                    observador.observe(elementoObservado, opcionesObservador);
+                } catch (error) { }  
+            }
+        }else if( pagina.includes("stripchat") ){
+            try {
+                var sPath = window.location.pathname;
+                perfil = sPath.substring(sPath.lastIndexOf('/') + 1);
+                setTimeout(async () => {
+                    var panelTransmision = !!document.querySelector(".model-broadcast-player-wrapper");
+                    console.log(panelTransmision);
+                    if( panelTransmision ){
+                        try {
+                            if( !!document.querySelector(".external-player") ){
+                                estadoTransmision = document.querySelector(".external-player").childNodes[0].className;
+                            }else{
+                                estadoTransmision = "external-offline";
+                            }
+                            
+                            var textTransmision = await postTransmision(perfil, estadoTransmision, "stripchat1");
+                            if( textTransmision["itemCount"] > 0 ){
+                                console.log('Estado de Transmision '+ estadoTransmision);
+                            }
+                        } catch (error) {   }
+                        
 
-                // Configura las opciones para el observador (en este caso, observar cambios en el contenido y atributos)
-                const opcionesObservador = {
-                    childList: true,
-                    attributes: true,
-                    subtree: true
-                };
+                        const elementoObservado = document.querySelector("div.broadcast-player-wrapper-video-content.view-cam-resizer-boundary-y");
+                        // Crea una instancia de MutationObserver con una función de devolución de llamada
+                        const observador = new MutationObserver(function(mutations) {
+                            mutations.forEach(async function(mutation) {
+                                if(mutation.addedNodes.length > 0){
+                                    if(mutation.target.className == "external-player"){
+                                        estadoTransmision = mutation.addedNodes[0].className;
+                                        console.log('Estado de Transmision:'+ estadoTransmision);
+                                        var textTransmision = await postTransmision(perfil, estadoTransmision, "stripchat");
+                                        if( textTransmision["itemCount"] > 0 ){
+                                            console.log('Estado de Transmision '+ estadoTransmision);
+                                        }
+                                    }
+                                }
+                            });
+                        });
 
-                // Inicia la observación del elemento observado con las opciones especificadas
-                observador.observe(elementoObservado, opcionesObservador);
-            } catch (error) { }  
+                        // Configura las opciones para el observador (en este caso, observar cambios en el contenido y atributos)
+                        const opcionesObservador = {
+                            childList: true,
+                            attributes: true,
+                            subtree: true
+                        };
+
+                        // Inicia la observación del elemento observado con las opciones especificadas
+                        observador.observe(elementoObservado, opcionesObservador);
+                    }
+                }, 5000);                
+            } catch (error) { console.log(error); }  
         }
-    } catch (error) {}
+    } catch (error) { console.log(error); }
 });
 
 function mensaje(userName, nomTipper) {
@@ -200,9 +254,9 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 async function gotMessage(request, sender, sendResponse) {
     if( request.txt == "alertMensaje" ){
-        if( request.accion == "ntf" ){
+        if ( request.accion == "ntf" ){
             alert(request.message);
-        } else if( request.accion == "finMsg" ){
+        } else if ( request.accion == "finMsg" ){
             alert(request.message);
         }
     }
