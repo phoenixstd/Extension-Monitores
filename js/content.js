@@ -136,16 +136,19 @@ window.addEventListener('load', (event) => {
                     if( panelTransmision ){
                         try {
                             if( !!document.querySelector(".external-player") ){
+                                console.log("Transmitiendo");
                                 estadoTransmision = document.querySelector(".external-player").childNodes[0].className;
                             }else{
+                                console.log("No Transmitiendo");
                                 estadoTransmision = "external-offline";
                             }
                             
-                            var textTransmision = await postTransmision(perfil, estadoTransmision, "stripchat1");
+                            var textTransmision = await postTransmision(perfil, estadoTransmision, "stripchat");
                             if( textTransmision["itemCount"] > 0 ){
+                                console.log("Deberia estar subido");
                                 console.log('Estado de Transmision '+ estadoTransmision);
                             }
-                        } catch (error) {   }
+                        } catch (error) { console.log(error);  }
                         
 
                         const elementoObservado = document.querySelector("div.broadcast-player-wrapper-video-content.view-cam-resizer-boundary-y");
@@ -156,8 +159,10 @@ window.addEventListener('load', (event) => {
                                     if(mutation.target.className == "external-player"){
                                         estadoTransmision = mutation.addedNodes[0].className;
                                         console.log('Estado de Transmision:'+ estadoTransmision);
+                                        
                                         var textTransmision = await postTransmision(perfil, estadoTransmision, "stripchat");
                                         if( textTransmision["itemCount"] > 0 ){
+                                            console.log("Deberia estar subido");
                                             console.log('Estado de Transmision '+ estadoTransmision);
                                         }
                                     }
@@ -175,8 +180,50 @@ window.addEventListener('load', (event) => {
                         // Inicia la observación del elemento observado con las opciones especificadas
                         observador.observe(elementoObservado, opcionesObservador);
                     }
-                }, 5000);                
-            } catch (error) { console.log(error); }  
+                }, 8000);                
+            } catch (error) {  }  
+
+        } else if ( pagina.includes("camsoda") ){
+            //alert("hola");
+            setTimeout(async () => {
+                perfil = document.querySelector(".Header-module__headerButtonAccount--LXO74").textContent.toLowerCase();
+                let url_transmision = window.location.toString();
+                if( url_transmision.includes(perfil) ){
+                    try {
+                        estadoTransmision = document.querySelector(".obs-module__streamStatus--Y0Oez").textContent;
+                        console.log('Estado de Transmision:'+ estadoTransmision);
+                        var textTransmision = await postTransmision(perfil, estadoTransmision, "camsoda");
+                        if( textTransmision["itemCount"] > 0 ){
+                            console.log('Estado de Transmision POST ->'+ estadoTransmision);
+                        }
+                    } catch (error) { }
+
+                    try {
+                        const elementoObservado = document.querySelector(".obs-module__streamStatus--Y0Oez");
+                        const observador = new MutationObserver(function(mutations) {
+                            mutations.forEach(async function(mutation) {
+                                console.log(mutation);
+                                if( estadoTransmision !== mutation.target.textContent ){
+                                    estadoTransmision = mutation.target.textContent;
+                                    console.log('Estado de Transmision:'+ estadoTransmision);
+                                    var textTransmision = await postTransmision(perfil, estadoTransmision, "camsoda");
+                                    if( textTransmision["itemCount"] > 0 ){
+                                        console.log('Estado de Transmision POST ->'+ estadoTransmision);
+                                    }
+                                }
+                            });
+                        });
+        
+                        const opcionesObservador = {
+                            childList: true,
+                            attributes: true,
+                            subtree: true
+                        };
+        
+                        observador.observe(elementoObservado, opcionesObservador);
+                    } catch (error) { } 
+                }
+            }, 4000);
         }
     } catch (error) { console.log(error); }
 });
