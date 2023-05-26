@@ -1,5 +1,5 @@
 body{
-    width: 400px; 
+    width: 780px; 
     height: 70px; 
     background-color: #FEFEFE;
 }
@@ -13,7 +13,8 @@ h4 {
 
 #img-header {
     text-align: center;
-    padding: 20px;
+    padding-left: 200px;
+    padding-right: 200px;
     background-color: #ce8fd3;
     box-shadow: 10px 10px #c01996be;
 }
@@ -65,4 +66,34 @@ h4 {
     text-shadow: 2px 2px #e63cbc7a;
     color: #8d0d96;
     vertical-align: middle;
+}
+
+.fondo{
+    background-color: rgb(194,190,194);
+}
+
+.titulo{
+    background-color: rgb(244, 239, 244);
+    color: rgb(165, 42, 42);
+}
+
+.tabla{
+    background-color: rgba(124,34,130,1.00);
+}
+
+.textos{
+    color: rgb(194,190,194);
+}
+
+.btnEjec{
+    background-color: rgba(255,255,255,0.50);
+}
+
+.btnDescargar{
+    background-color: rgb(179, 156, 201);
+}
+
+.footerPop{
+    color: rgb(194,190,194);
+    background-color: rgba(124,34,130,1.00);
 }

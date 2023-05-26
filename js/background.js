@@ -2,24 +2,25 @@
 let dominio = "apps.phoenixstd.com";
 //let dominio = "pruebas";
 
-let url_api_tippers = "https://" + dominio + "/api/tippers.php";
-let url_api_mensajes = "https://" + dominio + "/api/mensajes_telegram.php";
-/*let url_api_tipperspru = "http://localhost/web/" + dominio + "/api/tippers.php";
-let url_api_mensajes_telegram = "http://localhost/web/" + dominio + "/api/mensajes_telegram.php";*/
-
-let tippersMensajes = [];
-let windowTipper = 0;
-let tabWindowTipper = 0;
-
-let userName = "";
-
 let ejecutarExtension = true;
-let contPagMensaje = 0;
-let contadorMensajes = 0;
 
 // Proceso Inicial
 console.log('INICIANDO BACKGROUND');
 console.log(`Proceso Iniciado:  ${getCurrentDateTimeString()}`);
+
+
+let arrayChatur = [];
+let arrayStrip = [];
+let cantidadPestañas = 0;
+let windowIdModelo = 0;
+let tabwindowIdModelo = 0;
+let contadorPestañasAbiertas = 0;
+let link = "";
+var usuariosModelos = [];
+
+/*chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.set({sede: 0});
+})*/
 
 function getCurrentDateTimeString() {
     var today = new Date();
@@ -28,81 +29,99 @@ function getCurrentDateTimeString() {
     return date + ' ' + time;
 }
 
-async function getTippers(modelo) {
-    try {
-        let res = await fetch(url_api_tippers+"?modelo="+modelo);
-        return await res.json();
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 chrome.runtime.onMessage.addListener(async function (msg, sender, sendResponse) {
-    if (msg.txt == "EnviarTipper") {
-        const data = new FormData();
-        data.append('nombre', msg.param);
-        data.append('modelo', msg.param2);
-    
-        fetch(url_api_tippers, {
-            body: data,
-            method: "post",
-        })
-            .then(response => response.json())
-            .then(function(json) {
-                if(json["itemCount"] > 0 ){
-                    console.log(JSON.stringify(seleccionUsuarios));
-                }else{
-                    console.log("Ocurrio un error al cargar la base de datos");
-                }
-            }).catch(error  => console.log(error));
-        return true;
-    
-    } else if (msg.txt == "startMensajes"){
-        ejecutarExtension = true;
-        chrome.action.setBadgeText({
-            text: "ON",
-        });
-        userName = msg.userName;
-        tippersMensajes = await getTippers(userName);
-        if(tippersMensajes["itemCount"] > 0 ){
-            console.log(JSON.stringify(tippersMensajes["body"]));
-            tippersMensajes = tippersMensajes["body"];
-            const nombres = tippersMensajes.map(tippers => tippers.nombre);
-            //mensajesAlerta("ntf",nombres);
-            abrirTipper()
-        }else{
-            console.log("La modelo no tiene tippers cargados");
-            mensajesAlerta("ntf","La modelo no tiene tippers cargados");
-        }
-        return true;
-    
-    } else if ( msg.txt == "nextTipper" ){
-        console.log(contadorMensajes);
-        if( msg.param == "enviado" ){
-            contadorMensajes++;
-        }
-        if( contadorMensajes < 5){
-            abrirTipper();
-            console.log("Cerrando Ventana " + windowTipper);
-            chrome.windows.remove(windowTipper);
-        }else{
-            mensajesAlerta("finMsg","Ya se cargo el limite de mensajes permitidos por ejecucion");
-            setTimeout(() => {
-                console.log("Cerrando Ventana " + windowTipper);
-                chrome.windows.remove(windowTipper);
-            }, 5000);
-        }
-
-        /*console.log("Cerrando Ventana " + windowTipper);
-        chrome.windows.remove(windowTipper);*/
-
-    } else if (msg.txt == "stopProcess") {
+    if (msg.txt == "stopProcess") {
         console.log("Se canceló el proceso");
         ejecutarExtension = false;
         chrome.action.setBadgeText({
             text: "OFF",
         });
         return true;
+    } else if (msg.txt == "enviarData") {
+        usuariosModelos = JSON.parse(msg.param);
+        console.log('received in background ');
+        cantidadPestañas = usuariosModelos.length;
+        console.log(cantidadPestañas);
+        console.log(usuariosModelos);
+
+        if (usuariosModelos[0].plataforma == "chaturbate") {
+            link = "https://www.cbhours.com/user/" + usuariosModelos[0].user + ".html";
+        } else {
+            link = "https://www.striphours.com/user/" + usuariosModelos[0].user + ".html";
+        }
+
+        chrome.windows.create({
+                url: link,
+                type: "normal",
+                focused: true,
+                width: 1500,
+                height: 1100
+            },
+            function(window) {
+                windowIdModelo = window.id;
+                tabwindowIdModelo = window.tabs[0].id;
+                contadorPestañasAbiertas = contadorPestañasAbiertas + 1;
+                function abrirPestañas() {
+                    traerData();
+                };
+                chrome.scripting.executeScript({
+                    target: { tabId: tabwindowIdModelo },
+                    function: abrirPestañas,
+                });
+            }
+        );
+    } else if (msg.txt == "limpiarData") {
+        arrayChatur = [];
+        arrayStrip = [];
+    } else if (msg.txt == "siguientePestaña") {
+        console.log("Recibido");
+        var dataExtraida = msg.param2;
+
+        if (msg.param3 === "Chaturbate") {
+            for (i = 0; i < dataExtraida.length; i++) {
+                arrayChatur.push(dataExtraida[i]);
+            }
+        }
+        if (msg.param3 === "Strip") {
+            for (i = 0; i < dataExtraida.length; i++) {
+                arrayStrip.push(dataExtraida[i]);
+            }
+        }
+
+        if (contadorPestañasAbiertas < cantidadPestañas) {
+            console.log(contadorPestañasAbiertas);
+            console.log(cantidadPestañas);
+            console.log(usuariosModelos);
+            if (usuariosModelos[contadorPestañasAbiertas].plataforma == "chaturbate") {
+                link = "https://www.cbhours.com/user/" + usuariosModelos[contadorPestañasAbiertas].user + ".html";
+            } else {
+                link = "https://www.striphours.com/user/" + usuariosModelos[contadorPestañasAbiertas].user + ".html";
+            }
+
+            chrome.tabs.create({
+                    url: link,
+                    "windowId": windowIdModelo,
+                    "active": true,
+                    "selected": true
+                },
+                function(windowTab) {
+                    contadorPestañasAbiertas = contadorPestañasAbiertas + 1;
+                    function abrirPestañas() { 
+                        traerData();
+                    };
+                    chrome.scripting.executeScript({
+                        target: { tabId: windowTab.id },
+                        function: abrirPestañas
+                    });
+                }
+            );
+        } else {
+            chrome.windows.remove(windowIdModelo);
+            sendResponse({ "finalizado": true });
+            console.log("Finalizado");
+        }
+    } else if (msg.txt == "solicitarData") {
+        sendResponse({ "arrayChatur": arrayChatur, "arrayStrip": arrayStrip });
     }
 });
 
@@ -111,34 +130,4 @@ function mensajesAlerta(accion, texto){
         var tabId = tabs[0].id;
         chrome.tabs.sendMessage(tabId, { accion: accion, message: texto, txt:"alertMensaje"});
     });
-}
-
-function abrirTipper(){
-    if( contPagMensaje < tippersMensajes.length ){
-        var nomTipper = tippersMensajes[contPagMensaje].nombre;
-        chrome.windows.create({
-            url: "https://chaturbate.com/dm/"+nomTipper,
-            type: "normal",
-            focused: true,
-            height:900,
-            width:1200, 
-            top:0,
-            left:0
-        },
-            function (window) {
-                windowTipper = window.id;
-                tabWindowTipper = window.tabs[0].id;
-                console.log("Abriendo Ventana " + windowTipper);
-                function ejecutar(userName, nomTipper) {
-                    mensaje(userName, nomTipper);
-                };
-                chrome.scripting.executeScript({
-                    target: { tabId: tabWindowTipper },
-                    function: ejecutar,
-                    args: [userName, nomTipper],
-                })
-            }
-        );
-        contPagMensaje++;
-    }
 }

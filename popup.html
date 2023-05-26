@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/excel.js"></script>
     <link rel="stylesheet" type="text/css" href="css/popup.css">
     <title>Extension Phoenix Studio</title>
 </head>
@@ -17,35 +18,123 @@
     <div class="my-3 container-fluid">    
         <h4>Extension Phoenix Studio</h4>
         <div class="accordion accordion-flush" id="desplegableMenu" >
+
+            <div class="accordion-item" >
+                <h2 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        <b>Configuracion Controlador</b> <b id="nombreSede" hidden></b>
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#desplegableMenu">
+                    <div class="accordion-body">
+                        <select name="sede" id="sede"></select>
+                        <button id="botonSede" name="botonSede">Cambiar</button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="accordion-item">
                 <h2 class="accordion-header" id="tippers-heading">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#trafico-tippers" aria-expanded="false" aria-controls="trafico-tippers">
-                        <img src="images/chaturbate.png" width="30%"/> - <b>Trafico Tippers</b>
+                        <b>Horas de Transmision - Semimanual</b>
                     </button>
                 </h2>
                 <div id="trafico-tippers" class="accordion-collapse collapse" aria-labelledby="tippers-heading" data-bs-parent="#desplegableMenu">
                     <div class="accordion-body">
-                        <button class="btn-start btn-primary" id="runexec">Enviar Mensaje a Tippers</button>
-                        <button class="btn-stop btn-primary" id="stopexec">Detener</button>
+                        <h1 class="text-center text-primary titulo">Phoenix Studio <img src="images/phoenixstudio.png" height="45" width="45" style="margin-right: 10px;" /></h1>
+
+                        <table class="table table-dark text-center table-bordered border-primary tabla">
+                            <tr>
+                                <th colspan="2">De: <input type="date" class="textos" id="fechaIni" name="fechaIni" value=""> Hasta: <input type="date" class="textos" id="fechaFin" name="fechaFin" value=""></th>
+                            </tr>
+                            <tr>
+                                <th>Chaturbate <img src="images/chatur.png" height="45" width="100" style="margin-left: 10px;" /></th>
+                                <th>Stripchat <img src="images/strip.png" height="50" width="100" style="margin-left: 10px;" /></th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Ingresa los nombres de usuario de Chaturbate de las modelos</p>
+                                    <textarea id="usuariosChatur" name="chatur" rows="4" cols="35"></textarea>
+                                </td>
+                                <td>
+                                    <p>Ingresa los nombres de usuario de StripChat de las modelos</p>
+                                    <textarea id="usuariosStrip" name="strip" rows="4" cols="35"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button class="btn btn-dark btnEjec" type="submit" id="cargar">Ejecutar</button>
+                                        </div>
+    
+                                        <div class="col-12">
+                                            <button class="btn btn-dark btnDescargar" type="submit" id="limpiarDatos">Limpiar Registros</button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button class="btn btn-dark btnDescargar" type="submit" id="btnDescargarData"><img src="images/extraer.png" height="20" width="20" style="margin-right: 10px;" />Extraer datos</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-dark btnDescargar" type="submit" id="btnDescargarDataExcel" title="Solo se puede accionar luego de que se abran y se cierrem las paginas de chatur y strip"><img src="images/excel.png" height="20" width="20" style="margin-right: 10px;" />Extraer datos a excel</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div id="respuesta" class="container-fluid">
+                            <div class="row text-center tabla" id="tablas">
+                                <div class="col-6">
+                                    <button class="btn btn-dark btnEjec" type="submit" id="btnDatosChatur" value="on">Ocultar Datos Chatur</button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-dark btnEjec" type="submit" id="btnDatosStrip" value="on">Ocultar Datos Strip</button>
+                                </div>
+                            </div>
+
+                            <div class="row text-center mt-3">
+                                <table id="tablaChatur" class="table table-dark text-center table-bordered border-primary tabla">
+                                    <tr>
+                                        <th colspan="5">Chaturbate</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Fecha</th>
+                                        <th>Dia</th>
+                                        <th>Transmision</th>
+                                        <th>Plataforma</th>
+                                    </tr>
+                                </table>
+                                <table id="tablaStrip" class="table table-dark text-center table-bordered border-primary tabla">
+                                    <tr>
+                                        <th colspan="5">StripChat</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Fecha</th>
+                                        <th>Dia</th>
+                                        <th>Transmision</th>
+                                        <th>Plataforma</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="accordion-item" hidden>
-                <h2 class="accordion-header" id="flush-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                    Accordion Item #2
-                    </button>
-                </h2>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#desplegableMenu">
-                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-                </div>
-            </div>
         </div>
+        <hr>
     </div>
     
     <div id="footer">@2023 - Phoenix Studio</div>
+
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/popup.js"></script>
 </body>
-<script src="js/popup.js"></script>
+
 
 </html>
